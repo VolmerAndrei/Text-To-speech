@@ -131,6 +131,7 @@ if win==1:
     print("*** Good Job!!!  You win!!! ***")
 else:
     print("You lose!!! :(")
+input('Press ENTER to exit')
     
         
      
