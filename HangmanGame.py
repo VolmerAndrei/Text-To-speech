@@ -76,6 +76,7 @@ HANGMAN_STEPS = [
 
 win=0
 tryes=0
+usedLetters=[]
 #From a list
 #words=["food", "cars", "home"]
 #word=random.choice(words)
@@ -99,7 +100,8 @@ while x<len(word):
         x=x+1
 #hiddenWord=list(word)
 check=""
-while(win!=1 or tryes!=6):
+while(True):
+    letter=0
     if check==word:
         win=1
     check=""
@@ -111,18 +113,24 @@ while(win!=1 or tryes!=6):
         break
     print ("\n")
     print("What character do you chose?")
-    while True:
+    while letter==0:
         userInput=str(input())
         if len(userInput)==1:
+            if userInput in word and userInput not in usedLetters:
+                letter=1
+                usedLetters.append(userInput)
+                for y in range(len(word)):
+                    if word[y]==userInput:
+                        hiddenWord[y]=userInput    
+            elif userInput in usedLetters:
+                print("You already tried this one!")
+            else:
+                tryes=tryes+1
+                usedLetters.append(userInput)
             break
         else:
             print("Please enter a single character!")
-    if userInput in word:
-        for y in range(len(word)):
-            if word[y]==userInput:
-                hiddenWord[y]=userInput    
-    else:
-        tryes=tryes+1
+        
     for _ in range(len(word)):
         check=check+hiddenWord[_]
     #print("Check is", check)
@@ -130,6 +138,7 @@ while(win!=1 or tryes!=6):
 if win==1:
     print("*** Good Job!!!  You win!!! ***")
 else:
+    print("The word was **", word, "**")
     print("You lose!!! :(")
 input('Press ENTER to exit')
     
