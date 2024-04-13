@@ -10,60 +10,6 @@ import time
 import pyttsx3
 import re
 
-def Function_Detect_Text_Language():
-    Page_Reader=reader.pages[50]
-    Page_Text=Page_Reader.extract_text()
-
-    langdetect.DetectorFactory.seed = 0
-    Translate_From_Language=langdetect.detect(Page_Text)
-    print(Translate_From_Language)
-    return(Translate_From_Language)
-
-def Function_Translate_Text(Text, page_no, Translate_From_Language):
-    #page_no
-    for i in range(page_no):
-        Page_Reader=reader.pages[i]
-        Page_Text=Page_Reader.extract_text()
-    
-        if "CONTENTS" in Page_Text:
-            pass
-        else:
-            if Translate_From_Language != "ro":
-                Translated_Page=GoogleTranslator(source=Translate_From_Language, target="ro").translate(Page_Text)
-                #Translated_Page=str(Translator.translate(Page_Text, src=Translate_From_Language, dest="ro"))
-                Text=Text+Translated_Page
-            else:
-                Text=Text+Page_Text
-            print("Pagina-",i,"a fost tradusa si scrisa.")
-    
-    print(len(Text))
-    return Text
-
-def Function_Delete_First_Pages(Text):
-    lista=[]
-    lista=re.split('(CAPITOLUL I\n)', Text)
-    str_count=lista.count("CAPITOLUL I\n")
-  
-    find=0
-    for i in lista:
-        if i!="CAPITOLUL I\n" and find!=str_count:
-            lista.remove(i)
-            find=find+1
- 
-    print(lista)
-    return lista
-
-def Function_Split_In_Chapters(Text, lista):
-    Text=""
-    for i in lista:
-        Text=Text+i
-    
-    lista=re.split('CAPITOLUL', Text)
-    print(lista)
-    lista.pop(0)
-    return lista
-
-
 engine = pyttsx3.init()
 voices = engine.getProperty('voices')
 engine.setProperty('voice', "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\MSTTS_V110_roRO_Andrei")
@@ -76,16 +22,51 @@ Text=""
 Translator=googletrans.Translator()
 
 page_no=len(reader.pages)
+Page_Reader=reader.pages[50]
+Page_Text=Page_Reader.extract_text()
 
-Translate_From_Language=Function_Detect_Text_Language()
+langdetect.DetectorFactory.seed = 0
+Translate_From_Language=langdetect.detect(Page_Text)
+print(Translate_From_Language)
 
-Text=Function_Translate_Text(Text, page_no, Translate_From_Language)    
+#page_no
+for i in range(page_no):
+    Page_Reader=reader.pages[i]
+    Page_Text=Page_Reader.extract_text()
+    
+    if "CONTENTS" in Page_Text:
+        pass
+    else:
+        if Translate_From_Language != "ro":
+            Translated_Page=GoogleTranslator(source=Translate_From_Language, target="ro").translate(Page_Text)
+            #Translated_Page=str(Translator.translate(Page_Text, src=Translate_From_Language, dest="ro"))
+            Text=Text+Translated_Page
+        else:
+            Text=Text+Page_Text
+        print("Pagina-",i,"a fost tradusa si scrisa.")    
+print(len(Text))
 
-lista=Function_Delete_First_Pages(Text)
+lista=[]
+lista=re.split('(CAPITOLUL I\n)', Text)
+str_count=lista.count("CAPITOLUL I\n")
+  
+find=0
+for i in lista:
+    if i!="CAPITOLUL I\n" and find!=str_count:
+        lista.remove(i)
+        find=find+1
+ 
+print(lista)
 #lista.pop(0)
 
-lista=Function_Split_In_Chapters(Text, lista)
-print(type(lista))
+Text=""
+for i in lista:
+    Text=Text+i
+    
+lista=re.split('CAPITOLUL', Text)
+print(lista)
+lista.pop(0)
+
 count=1
 for i in lista:
     Pista="CAPITOLUL"+i
@@ -109,7 +90,7 @@ for i in lista:
 
 
 
-#    len(Substrings)
+    #len(Substrings)
 #for i in range(len(Substrings)):
 #    folderpath=r'C:\Users\Volmer\OneDrive\Desktop\Carti Audio\The-Travels-of-Marco-Polo-Volume-2--Carte Audio--Sintetic'
 #    filename=f"Pista-{i}--The-Travels-of-Marco-Polo-Volume-2.mp3"
@@ -120,3 +101,5 @@ for i in lista:
 #    engine.save_to_file(f"Pist {i}"+Substrings[i], save_path)
 #    engine.runAndWait()
 #    print("Pista", i, "a fost salvata.")
+
+
