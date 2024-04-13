@@ -19,7 +19,7 @@ def Function_Detect_Text_Language():
     print(Translate_From_Language)
     return(Translate_From_Language)
 
-def Function_Translate_Text(page_no, Translate_From_Language):
+def Function_Translate_Text(Text, page_no, Translate_From_Language):
     #page_no
     for i in range(page_no):
         Page_Reader=reader.pages[i]
@@ -39,7 +39,7 @@ def Function_Translate_Text(page_no, Translate_From_Language):
     print(len(Text))
     return Text
 
-def Function_Delete_First_Pages():
+def Function_Delete_First_Pages(Text):
     lista=[]
     lista=re.split('(CAPITOLUL I\n)', Text)
     str_count=lista.count("CAPITOLUL I\n")
@@ -79,13 +79,13 @@ page_no=len(reader.pages)
 
 Translate_From_Language=Function_Detect_Text_Language()
 
-Text=Function_Translate_Text(page_no, Translate_From_Language)    
+Text=Function_Translate_Text(Text, page_no, Translate_From_Language)    
 
-lista=Function_Delete_First_Pages()
+lista=Function_Delete_First_Pages(Text)
 #lista.pop(0)
 
-lista=Function_Split_In_Chapters
-
+lista=Function_Split_In_Chapters(Text, lista)
+print(type(lista))
 count=1
 for i in lista:
     Pista="CAPITOLUL"+i
@@ -101,24 +101,22 @@ for i in lista:
 
 
 
-n=10000
-Substrings=[]
-for i in range(0, len(Text), n):
-    substring=Text[i:i+n]
-    Substrings.append(substring)
+#n=10000
+#Substrings=[]
+#for i in range(0, len(Text), n):
+#    substring=Text[i:i+n]
+#    Substrings.append(substring)
 
 
-"""
-    len(Substrings)
-for i in range(len(Substrings)):
-    folderpath=r'C:\Users\Volmer\OneDrive\Desktop\Carti Audio\The-Travels-of-Marco-Polo-Volume-2--Carte Audio--Sintetic'
-    filename=f"Pista-{i}--The-Travels-of-Marco-Polo-Volume-2.mp3"
-    save_path=os.path.join(folderpath, filename)
+
+#    len(Substrings)
+#for i in range(len(Substrings)):
+#    folderpath=r'C:\Users\Volmer\OneDrive\Desktop\Carti Audio\The-Travels-of-Marco-Polo-Volume-2--Carte Audio--Sintetic'
+#    filename=f"Pista-{i}--The-Travels-of-Marco-Polo-Volume-2.mp3"
+#    save_path=os.path.join(folderpath, filename)
     
     #Text_To_Speech=gTTS(text=f"Pista {i}"+Substrings[i], lang='ro', slow=False)
     #Text_To_Speech.save(save_path)
-    engine.save_to_file(f"Pist {i}"+Substrings[i], save_path)
-    engine.runAndWait()
-    print("Pista", i, "a fost salvata.")
-"""
-
+#    engine.save_to_file(f"Pist {i}"+Substrings[i], save_path)
+#    engine.runAndWait()
+#    print("Pista", i, "a fost salvata.")
