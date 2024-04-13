@@ -35,7 +35,33 @@ def Function_Translate_Text(page_no, Translate_From_Language):
             else:
                 Text=Text+Page_Text
             print("Pagina-",i,"a fost tradusa si scrisa.")
+    
+    print(len(Text))
+    return Text
 
+def Function_Delete_First_Pages():
+    lista=[]
+    lista=re.split('(CAPITOLUL I\n)', Text)
+    str_count=lista.count("CAPITOLUL I\n")
+  
+    find=0
+    for i in lista:
+        if i!="CAPITOLUL I\n" and find!=str_count:
+            lista.remove(i)
+            find=find+1
+ 
+    print(lista)
+    return lista
+
+def Function_Split_In_Chapters(Text, lista):
+    Text=""
+    for i in lista:
+        Text=Text+i
+    
+    lista=re.split('CAPITOLUL', Text)
+    print(lista)
+    lista.pop(0)
+    return lista
 
 
 engine = pyttsx3.init()
@@ -53,30 +79,12 @@ page_no=len(reader.pages)
 
 Translate_From_Language=Function_Detect_Text_Language()
 
-Text=Function_Translate_Text(page_no, Translate_From_Language)
-    
-print(len(Text))
+Text=Function_Translate_Text(page_no, Translate_From_Language)    
 
-lista=[]
-lista=re.split('(CAPITOLUL I\n)', Text)
-str_count=lista.count("CAPITOLUL I\n")
-  
-find=0
-for i in lista:
-    if i!="CAPITOLUL I\n" and find!=str_count:
-        lista.remove(i)
-        find=find+1
- 
-print(lista)
+lista=Function_Delete_First_Pages()
 #lista.pop(0)
 
-Text=""
-for i in lista:
-    Text=Text+i
-    
-lista=re.split('CAPITOLUL', Text)
-print(lista)
-lista.pop(0)
+lista=Function_Split_In_Chapters
 
 count=1
 for i in lista:
@@ -93,24 +101,24 @@ for i in lista:
 
 
 
-#n=10000
-#Substrings=[]
-#for i in range(0, len(Text), n):
-#    substring=Text[i:i+n]
-#    Substrings.append(substring)
+n=10000
+Substrings=[]
+for i in range(0, len(Text), n):
+    substring=Text[i:i+n]
+    Substrings.append(substring)
 
 
-
-    #len(Substrings)
-#for i in range(len(Substrings)):
-#    folderpath=r'C:\Users\Volmer\OneDrive\Desktop\Carti Audio\The-Travels-of-Marco-Polo-Volume-2--Carte Audio--Sintetic'
-#    filename=f"Pista-{i}--The-Travels-of-Marco-Polo-Volume-2.mp3"
-#    save_path=os.path.join(folderpath, filename)
+"""
+    len(Substrings)
+for i in range(len(Substrings)):
+    folderpath=r'C:\Users\Volmer\OneDrive\Desktop\Carti Audio\The-Travels-of-Marco-Polo-Volume-2--Carte Audio--Sintetic'
+    filename=f"Pista-{i}--The-Travels-of-Marco-Polo-Volume-2.mp3"
+    save_path=os.path.join(folderpath, filename)
     
     #Text_To_Speech=gTTS(text=f"Pista {i}"+Substrings[i], lang='ro', slow=False)
     #Text_To_Speech.save(save_path)
-#    engine.save_to_file(f"Pist {i}"+Substrings[i], save_path)
-#    engine.runAndWait()
-#    print("Pista", i, "a fost salvata.")
-
+    engine.save_to_file(f"Pist {i}"+Substrings[i], save_path)
+    engine.runAndWait()
+    print("Pista", i, "a fost salvata.")
+"""
 
