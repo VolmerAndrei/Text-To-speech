@@ -9,6 +9,7 @@ import os
 import time
 import re
 from nltk import tokenize
+from playsound import playsound
 
 def Function_Detect_Text_Language():
     Page_Reader=reader.pages[50]
@@ -140,7 +141,9 @@ for i in Piste:
     engine.runAndWait()
     print("Pista", count, "a fost salvata.")
     count=count+1
+   
 
+playsound('F:\Teme Programare\Text-To-Speech\Text-To-Speech\ding.mp3')
 
 
 r"""
