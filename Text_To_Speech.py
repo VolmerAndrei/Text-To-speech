@@ -67,6 +67,43 @@ def Function_Split_In_Chapters(Text, lista):
 
     return lista
 
+def Function_Split_In_20min(lista):
+    for i in range(len(lista)):
+        print("\n")
+        print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+        print(f"CAPITOLUL {i+1}")
+        print(len(lista[i].split()))
+        print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+
+    piste=[]
+    propozitii=[]
+    parte=""
+    for i in range(len(lista)):
+        parte=""
+        length=len(lista[i].split())
+        if length >2900:
+            propozitii=re.split('(\.)', lista[i])
+            for j in propozitii:
+                if len(parte.split())<2900:
+                    parte=parte+j
+                else:
+                    piste.append(parte)
+                    parte=""
+            if parte!="":
+                if len(parte.split())<=1000:
+                    piste[-1]=piste[-1]+parte
+                else:
+                    piste.append(parte)
+        else:
+            piste.append(lista[i])
+
+    for i in range(len(piste)):
+        print("\n\n")
+        print(len(piste[i].split()))
+        print(f"PARTEA {i+1}")
+        print(piste[i])
+        
+    return piste
 
 engine = pyttsx3.init()
 voices = engine.getProperty('voices')
@@ -89,50 +126,11 @@ lista=Function_Delete_First_Pages(Text)
 #lista.pop(0)
 
 lista=Function_Split_In_Chapters(Text, lista)
-#impart fiecare element din lista cu capitolele in liste. Fiecare lista din lista sa fie de marime de 20 min, iar daca 
-#ese mai mica de 1\4 din lingimea de 20 min sa o ataseze la cea de inainte
-#for in for 
-for i in range(len(lista)):
-    print("\n")
-    print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
-    print(f"CAPITOLUL {i+1}")
-    print(len(lista[i].split()))
-    print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
 
-piste=[]
-propozitii=[]
-parte=""
-for i in range(len(lista)):
-    parte=""
-    length=len(lista[i].split())
-    if length >2900:
-        propozitii=re.split('(\.)', lista[i])
-        for j in propozitii:
-            if len(parte.split())<2900:
-                parte=parte+j
-            else:
-                piste.append(parte)
-                parte=""
-        if parte!="":
-            if len(parte.split())<=1000:
-                piste[-1]=piste[-1]+parte
-            else:
-                piste.append(parte)
-    else:
-        piste.append(lista[i])
-
-for i in range(len(piste)):
-    print("\n\n")
-    print(len(piste[i].split()))
-    print(f"PARTEA {i+1}")
-    print(piste[i])
-    
-
-
-
+Piste=Function_Split_In_20min(lista)
 
 count=1
-for i in piste:
+for i in Piste:
     print("***PISTA***")
     print(i)
     folderpath=r'C:\Users\Volmer\OneDrive\Desktop\Carti Audio\Allans-Wife--Carte Audio--Sintetic'
