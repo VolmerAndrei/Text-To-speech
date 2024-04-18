@@ -23,21 +23,102 @@ class MyGUI(QMainWindow):
         uic.loadUi("untitled.ui", self)
         self.show()
         self.setWindowTitle("Text_To_Speech")
-
+        self.setWindowIcon(QIcon("Cult-Cover.jpg"))
+        shortcut = QKeySequence(Qt.CTRL + Qt.Key_Q)
+        self.shortcut = QShortcut(shortcut, self)
+        self.shortcut.activated.connect(exit)
+        
+        #****************Speed*********************#
         self.pushButton_5.clicked.connect(self.Speed)
         self.pushButton.clicked.connect(self.Save_Speed)
-        self.pushButton_7.clicked.connect(self.GO)
+        self.pushButton_2.clicked.connect(self.Preview_Speed)
+        
+        #****************Volume*********************#
+        self.pushButton_6.clicked.connect(self.Volume)
+        self.pushButton_4.clicked.connect(self.Save_Volume)
+        self.pushButton_3.clicked.connect(self.Preview_Volume)
+        
 
+        self.pushButton_7.clicked.connect(self.GO)
+    
+    #****************Speed*********************#
     def Speed(self):
         self.spinBox.setEnabled(True)
         self.pushButton_2.setEnabled(True)
         self.pushButton.setEnabled(True)
+        self.pushButton_5.setEnabled(False)
+        self.pushButton_6.setEnabled(False)
+        self.pushButton_7.setEnabled(False)
+        
+    def Preview_Speed(self):
+        Preview_Text="Acesta este un text pentru a testa rata de vorbire a vocii. Daca vorbeste prea rapid micsorati viteza!"
+        rate=self.spinBox.value()
+        print(rate)
+        engine.setProperty('rate', rate)
+        engine.say(Preview_Text)
+        engine.runAndWait()
+        engine.setProperty('rate', 200)
+
     def Save_Speed(self):
+        rate=self.spinBox.value()
+        engine.setProperty('rate', rate)
+        print(rate)
         self.spinBox.setEnabled(False)
         self.pushButton_2.setEnabled(False)
         self.pushButton.setEnabled(False)
-    def GO(self):
+        self.pushButton_5.setEnabled(True)
+        self.pushButton_6.setEnabled(True)
+        self.pushButton_7.setEnabled(True)
+    
+    #****************Volume*********************#
+    def Volume(self):
+        self.doubleSpinBox.setEnabled(True)
+        self.pushButton_4.setEnabled(True)
+        self.pushButton_3.setEnabled(True)
+        self.pushButton_5.setEnabled(False)
+        self.pushButton_6.setEnabled(False)
+        self.pushButton_7.setEnabled(False)
         
+    def Preview_Volume(self):
+        Preview_Text="Acesta este un text pentru a testa volumul de vorbire a vocii. Daca vorbeste prea tare micsorati volumul!"
+        vol=self.doubleSpinBox.value()
+        print(vol)
+        engine.setProperty('volume', vol)
+        engine.say(Preview_Text)
+        engine.runAndWait()
+        engine.setProperty('volume', 1.0)
+
+    def Save_Volume(self):
+        vol=self.doubleSpinBox.value()
+        engine.setProperty('volume', vol)
+        print(vol)
+        self.doubleSpinBox.setEnabled(False)
+        self.pushButton_4.setEnabled(False)
+        self.pushButton_3.setEnabled(False)
+        self.pushButton_5.setEnabled(True)
+        self.pushButton_6.setEnabled(True)
+        self.pushButton_7.setEnabled(True)
+        
+
+    def GO(self):
+        Text=""
+
+        Translator=googletrans.Translator()
+
+        page_no=len(reader.pages)
+
+        Translate_From_Language=Function_Detect_Text_Language()
+
+        Text=Function_Translate_Text(Text, page_no, Translate_From_Language)    
+
+        lista=Function_Delete_First_Pages(Text)
+        #lista.pop(0)
+
+        lista=Function_Split_In_Chapters(Text, lista)
+
+        Piste=Function_Split_In_20min(lista)
+
+        Function_Creare_Piste(Piste)
 
 
 
@@ -158,24 +239,7 @@ engine.setProperty('rate', 145)
 engine.setProperty('volume', 1.0)
 
 reader=PyPDF2.PdfReader(r'C:\Users\Volmer\OneDrive\Desktop\Carti PDF\Procesate\Allans-Wife.pdf')
-Text=""
 
-Translator=googletrans.Translator()
-
-page_no=len(reader.pages)
-
-Translate_From_Language=Function_Detect_Text_Language()
-
-Text=Function_Translate_Text(Text, page_no, Translate_From_Language)    
-
-lista=Function_Delete_First_Pages(Text)
-#lista.pop(0)
-
-lista=Function_Split_In_Chapters(Text, lista)
-
-Piste=Function_Split_In_20min(lista)
-
-Function_Creare_Piste(Piste)
    
 
 
