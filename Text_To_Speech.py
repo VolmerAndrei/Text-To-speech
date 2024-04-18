@@ -10,6 +10,36 @@ import time
 import re
 from nltk import tokenize
 from playsound import playsound
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
+from PyQt5 import uic
+import sys
+
+
+class MyGUI(QMainWindow):
+    def __init__(self):
+        super(MyGUI, self).__init__()
+        uic.loadUi("untitled.ui", self)
+        self.show()
+        self.setWindowTitle("Text_To_Speech")
+
+        self.pushButton_5.clicked.connect(self.Speed)
+        self.pushButton.clicked.connect(self.Save_Speed)
+        self.pushButton_7.clicked.connect(self.GO)
+
+    def Speed(self):
+        self.spinBox.setEnabled(True)
+        self.pushButton_2.setEnabled(True)
+        self.pushButton.setEnabled(True)
+    def Save_Speed(self):
+        self.spinBox.setEnabled(False)
+        self.pushButton_2.setEnabled(False)
+        self.pushButton.setEnabled(False)
+    def GO(self):
+        
+
+
 
 def Function_Detect_Text_Language():
     Page_Reader=reader.pages[50]
@@ -106,6 +136,21 @@ def Function_Split_In_20min(lista):
         
     return piste
 
+def Function_Creare_Piste(Piste):
+    count=1
+    for i in Piste:
+        print("***PISTA***")
+        print(i)
+        folderpath=r'C:\Users\Volmer\OneDrive\Desktop\Carti Audio\Allans-Wife--Carte Audio--Sintetic'
+        filename=f"Pista-{count}--Allans-Wife.mp3"
+        save_path=os.path.join(folderpath, filename)
+        engine.save_to_file(f"Pista {count}"+i, save_path)
+        engine.runAndWait()
+        print("Pista", count, "a fost salvata.")
+        count=count+1
+    playsound('F:\Teme Programare\Text-To-Speech\Text-To-Speech\ding.mp3')
+    
+
 engine = pyttsx3.init()
 voices = engine.getProperty('voices')
 engine.setProperty('voice', "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\MSTTS_V110_roRO_Andrei")
@@ -130,21 +175,14 @@ lista=Function_Split_In_Chapters(Text, lista)
 
 Piste=Function_Split_In_20min(lista)
 
-count=1
-for i in Piste:
-    print("***PISTA***")
-    print(i)
-    folderpath=r'C:\Users\Volmer\OneDrive\Desktop\Carti Audio\Allans-Wife--Carte Audio--Sintetic'
-    filename=f"Pista-{count}--Allans-Wife.mp3"
-    save_path=os.path.join(folderpath, filename)
-    engine.save_to_file(f"Pista {count}"+i, save_path)
-    engine.runAndWait()
-    print("Pista", count, "a fost salvata.")
-    count=count+1
+Function_Creare_Piste(Piste)
    
 
-playsound('F:\Teme Programare\Text-To-Speech\Text-To-Speech\ding.mp3')
 
+
+app=QApplication([])
+window=MyGUI()
+app.exec_()
 
 r"""
 n=10000
