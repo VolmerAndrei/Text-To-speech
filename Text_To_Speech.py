@@ -14,7 +14,10 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5 import uic
-import sys
+import sys, os
+
+if getattr(sys, 'frozen', False):
+    os.chdir(sys._MEIPASS)
 
 
 class MyGUI(QMainWindow):
@@ -26,7 +29,7 @@ class MyGUI(QMainWindow):
         self.setWindowIcon(QIcon("Cult-Cover.jpg"))
         shortcut = QKeySequence(Qt.CTRL + Qt.Key_Q)
         self.shortcut = QShortcut(shortcut, self)
-        self.shortcut.activated.connect(exit)
+        self.shortcut.activated.connect(self.Close)
         
         #****************Speed*********************#
         self.pushButton_5.clicked.connect(self.Speed)
@@ -41,6 +44,9 @@ class MyGUI(QMainWindow):
 
         self.pushButton_7.clicked.connect(self.GO)
     
+    def Close(self):
+        sys.exit()
+
     #****************Speed*********************#
     def Speed(self):
         self.spinBox.setEnabled(True)
