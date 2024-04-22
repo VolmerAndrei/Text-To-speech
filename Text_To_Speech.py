@@ -41,6 +41,22 @@ class MyGUI(QMainWindow):
         self.pushButton_4.clicked.connect(self.Save_Volume)
         self.pushButton_3.clicked.connect(self.Preview_Volume)
         
+        #****************Select Folder*********************#
+        self.pushButton_9.clicked.connect(self.Browse_Select_Folder)
+        self.pushButton_8.clicked.connect(self.Select_Folder)
+        self.pushButton_12.clicked.connect(self.Save_Select_Folder)
+        
+        #****************Save Folder*********************#
+        self.pushButton_16.clicked.connect(self.Browse_Save_Folder)
+        self.pushButton_15.clicked.connect(self.Save_Folder)
+        self.pushButton_17.clicked.connect(self.Save_Save_Folder)
+
+        #****************Language*********************#
+        self.pushButton_10.clicked.connect(self.Language)
+        comboBox=QComboBox()
+        self.comboBox.addItems(["Romana", "English", "Español"])
+
+
 
         self.pushButton_7.clicked.connect(self.GO)
     
@@ -104,7 +120,69 @@ class MyGUI(QMainWindow):
         self.pushButton_5.setEnabled(True)
         self.pushButton_6.setEnabled(True)
         self.pushButton_7.setEnabled(True)
-        
+     
+    #****************Select Folder*********************#
+    def Select_Folder(self):
+        self.pushButton_9.setEnabled(True)
+        self.lineEdit.setEnabled(True)
+        self.pushButton_12.setEnabled(True)
+        self.pushButton_5.setEnabled(False)
+        self.pushButton_6.setEnabled(False)
+        self.pushButton_7.setEnabled(False)
+        self.pushButton_10.setEnabled(False)
+        self.pushButton_11.setEnabled(False)
+        self.pushButton_15.setEnabled(False)
+    def Browse_Select_Folder(self):
+        dirName = QFileDialog.getExistingDirectory(self, "Select Folder", "c:/")
+        self.lineEdit.setText(dirName)
+    def Save_Select_Folder(self):
+        self.pushButton_9.setEnabled(False)
+        self.lineEdit.setEnabled(False)
+        self.pushButton_12.setEnabled(False)
+        self.pushButton_5.setEnabled(True)
+        self.pushButton_6.setEnabled(True)
+        self.pushButton_7.setEnabled(True)
+        self.pushButton_10.setEnabled(True)
+        self.pushButton_11.setEnabled(True)
+        self.pushButton_15.setEnabled(True)
+    
+    #****************Save Folder*********************#
+    def Save_Folder(self):
+        self.pushButton_16.setEnabled(True)
+        self.lineEdit_2.setEnabled(True)
+        self.pushButton_17.setEnabled(True)
+        self.pushButton_5.setEnabled(False)
+        self.pushButton_6.setEnabled(False)
+        self.pushButton_7.setEnabled(False)
+        self.pushButton_10.setEnabled(False)
+        self.pushButton_11.setEnabled(False)
+        self.pushButton_8.setEnabled(False)
+    def Browse_Save_Folder(self):
+        dirName = QFileDialog.getExistingDirectory(self, "Select Folder", "c:/")
+        self.lineEdit_2.setText(dirName)
+    def Save_Save_Folder(self):
+        self.pushButton_16.setEnabled(False)
+        self.lineEdit_2.setEnabled(False)
+        self.pushButton_17.setEnabled(False)
+        self.pushButton_5.setEnabled(True)
+        self.pushButton_6.setEnabled(True)
+        self.pushButton_7.setEnabled(True)
+        self.pushButton_10.setEnabled(True)
+        self.pushButton_11.setEnabled(True)
+        self.pushButton_8.setEnabled(True)
+    
+    #****************Language*********************#
+    def Language(self):
+        self.comboBox.setEnabled(True)
+        self.pushButton_13.setEnabled(True)
+        self.pushButton_10.setEnabled(False)
+        self.pushButton_5.setEnabled(False)
+        self.pushButton_6.setEnabled(False)
+        self.pushButton_7.setEnabled(False)
+        self.pushButton_10.setEnabled(False)
+        self.pushButton_11.setEnabled(False)
+        self.pushButton_8.setEnabled(False)
+        self.pushButton_15.setEnabled(False)
 
     def GO(self):
         Text=""
