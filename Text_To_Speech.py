@@ -20,6 +20,7 @@ if getattr(sys, 'frozen', False):
     os.chdir(sys._MEIPASS)
 
 
+
 class MyGUI(QMainWindow):
     def __init__(self):
         super(MyGUI, self).__init__()
@@ -133,8 +134,21 @@ class MyGUI(QMainWindow):
         self.pushButton_11.setEnabled(False)
         self.pushButton_15.setEnabled(False)
     def Browse_Select_Folder(self):
-        dirName = QFileDialog.getExistingDirectory(self, "Select Folder", "c:/")
-        self.lineEdit.setText(dirName)
+        self.dirName_Select = QFileDialog.getOpenFileName(self, "Select Folder", "c:/", "PDF files (*.pdf)")
+        directory=str(self.dirName_Select[0])
+        print(directory)
+        print(type(directory))
+        self.reader=PyPDF2.PdfReader(directory)
+        
+        self.lineEdit.setText(self.dirName_Select[0])
+        Books=str(self.dirName_Select[0]).split("/")
+        for i in Books:
+            if ".pdf" in i:
+                self.Book_Name=i
+        print(self.dirName_Select[0])
+        print(Books)
+        self.Book_Name=self.Book_Name.replace(".pdf", "")
+        print(self.Book_Name)
     def Save_Select_Folder(self):
         self.pushButton_9.setEnabled(False)
         self.lineEdit.setEnabled(False)
@@ -145,7 +159,7 @@ class MyGUI(QMainWindow):
         self.pushButton_10.setEnabled(True)
         self.pushButton_11.setEnabled(True)
         self.pushButton_15.setEnabled(True)
-    
+
     #****************Save Folder*********************#
     def Save_Folder(self):
         self.pushButton_16.setEnabled(True)
@@ -158,8 +172,10 @@ class MyGUI(QMainWindow):
         self.pushButton_11.setEnabled(False)
         self.pushButton_8.setEnabled(False)
     def Browse_Save_Folder(self):
-        dirName = QFileDialog.getExistingDirectory(self, "Select Folder", "c:/")
-        self.lineEdit_2.setText(dirName)
+        self.dirName_Save = QFileDialog.getExistingDirectory(self, "Select Folder", "c:/")
+        self.lineEdit_2.setText(self.dirName_Save)
+        
+        
     def Save_Save_Folder(self):
         self.pushButton_16.setEnabled(False)
         self.lineEdit_2.setEnabled(False)
@@ -185,15 +201,16 @@ class MyGUI(QMainWindow):
         self.pushButton_15.setEnabled(False)
 
     def GO(self):
+        
         Text=""
 
         Translator=googletrans.Translator()
 
-        page_no=len(reader.pages)
+        page_no=len(self.reader.pages)
 
-        Translate_From_Language=Function_Detect_Text_Language()
+        Translate_From_Language=Function_Detect_Text_Language(self.reader)
 
-        Text=Function_Translate_Text(Text, page_no, Translate_From_Language)    
+        Text=Function_Translate_Text(Text, page_no, Translate_From_Language, self.reader)    
 
         lista=Function_Delete_First_Pages(Text)
         #lista.pop(0)
@@ -202,11 +219,26 @@ class MyGUI(QMainWindow):
 
         Piste=Function_Split_In_20min(lista)
 
-        Function_Creare_Piste(Piste)
+        Function_Creare_Piste(Piste, self.dirName_Save, self.Book_Name)
 
+def Function_Create_Save(dirName_Save, Book_Name):
+    folderpath=dirName_Save
+    createfolder=f"{Book_Name}--Carte Audio--Sintetica"
+    path=os.path.join(folderpath, createfolder)
+    print(path)
+    path=path.replace("\\", "/")
+    print(path)
+    os.makedirs(path)
+    return path
+    
+    
+def Function_Save_Pista(path, count, i, Book_Name):
+    filename=f"Pista-{count}--{Book_Name}.mp3"
+    save_path=os.path.join(path, filename)
+    engine.save_to_file(f"Pista {count}"+i, save_path)
+    engine.runAndWait()
 
-
-def Function_Detect_Text_Language():
+def Function_Detect_Text_Language(reader):
     Page_Reader=reader.pages[50]
     Page_Text=Page_Reader.extract_text()
 
@@ -215,7 +247,7 @@ def Function_Detect_Text_Language():
     print(Translate_From_Language)
     return(Translate_From_Language)
 
-def Function_Translate_Text(Text, page_no, Translate_From_Language):
+def Function_Translate_Text(Text, page_no, Translate_From_Language, reader):
     #page_no
     for i in range(page_no):
         Page_Reader=reader.pages[i]
@@ -301,19 +333,24 @@ def Function_Split_In_20min(lista):
         
     return piste
 
-def Function_Creare_Piste(Piste):
+def Function_Creare_Piste(Piste, dirName_Save, Book_Name):
+    path=Function_Create_Save(dirName_Save, Book_Name)
     count=1
     for i in Piste:
         print("***PISTA***")
         print(i)
-        folderpath=r'C:\Users\Volmer\OneDrive\Desktop\Carti Audio\Allans-Wife--Carte Audio--Sintetic'
-        filename=f"Pista-{count}--Allans-Wife.mp3"
-        save_path=os.path.join(folderpath, filename)
+        """folderpath=dirName_Save
+        createfolder=f"{Nume_Carte}--Carte Audio--Sintetica"
+        path=os.path.join(folderpath, createfolder)
+        filename=f"Pista-{count}--{Nume_Carte}.mp3"
+        save_path=os.path.join(path, filename)
         engine.save_to_file(f"Pista {count}"+i, save_path)
-        engine.runAndWait()
-        print("Pista", count, "a fost salvata.")
+        engine.runAndWait()"""
+        print(dirName_Save)
+        Function_Save_Pista(path, count, i, Book_Name)
+        print("Pista", count, Book_Name, "a fost salvata.")
         count=count+1
-    playsound('F:\Teme Programare\Text-To-Speech\Text-To-Speech\ding.mp3')
+    playsound('ding.mp3')
     
 
 engine = pyttsx3.init()
@@ -321,10 +358,6 @@ voices = engine.getProperty('voices')
 engine.setProperty('voice', "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\MSTTS_V110_roRO_Andrei")
 engine.setProperty('rate', 145)
 engine.setProperty('volume', 1.0)
-
-reader=PyPDF2.PdfReader(r'C:\Users\Volmer\OneDrive\Desktop\Carti PDF\Procesate\Allans-Wife.pdf')
-
-   
 
 
 
