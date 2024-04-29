@@ -1,4 +1,5 @@
-﻿import PyPDF2 
+﻿from csv import reader
+import PyPDF2 
 import gtts
 from gtts import gTTS
 import pyttsx3
@@ -15,6 +16,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5 import uic
 import sys, os
+import threading
 
 if getattr(sys, 'frozen', False):
     os.chdir(sys._MEIPASS)
@@ -59,7 +61,7 @@ class MyGUI(QMainWindow):
 
 
 
-        self.pushButton_7.clicked.connect(self.GO)
+        self.pushButton_7.clicked.connect(self.RunGO)
     
     def Close(self):
         sys.exit()
@@ -210,16 +212,27 @@ class MyGUI(QMainWindow):
 
         Translate_From_Language=Function_Detect_Text_Language(self.reader)
 
-        Text=Function_Translate_Text(Text, page_no, Translate_From_Language, self.reader)    
+        Text=Function_Translate_Text(Text, page_no, Translate_From_Language, self.reader)  
+        
+        print(Text)
 
-        lista=Function_Delete_First_Pages(Text)
+        self.lista=Function_Delete_First_Pages(Text)
         #lista.pop(0)
+        print(self.lista)
 
-        lista=Function_Split_In_Chapters(Text, lista)
+        self.lista=Function_Split_In_Chapters(self.lista)
+        
+        print(self.lista)
 
-        Piste=Function_Split_In_20min(lista)
+        Piste=Function_Split_In_20min(self.lista)
+
+        print(Piste)
 
         Function_Creare_Piste(Piste, self.dirName_Save, self.Book_Name)
+
+
+    def RunGO(self):
+        threading.Thread(target=self.GO).start()
 
 def Function_Create_Save(dirName_Save, Book_Name):
     folderpath=dirName_Save
@@ -273,6 +286,7 @@ def Function_Delete_First_Pages(Text):
     str_count=lista.count("CAPITOLUL I\n")
   
     find=0
+    #find!=str_count
     for i in lista:
         if i!="CAPITOLUL I\n" and find!=str_count:
             lista.remove(i)
@@ -281,17 +295,17 @@ def Function_Delete_First_Pages(Text):
     #print(lista)
     return lista
 
-def Function_Split_In_Chapters(Text, lista):
+def Function_Split_In_Chapters(lista):
     Text=""
     for i in lista:
         Text=Text+i
     
-    lista=re.split('CAPITOLUL', Text)
+    lista=re.split('Capitolul', Text, flags=re.IGNORECASE)
     
     lista.pop(0)
     for i in range(len(lista)):
         lista[i]="CAPITOLUL"+lista[i]
-    print(lista)
+    #print(lista)
 
     return lista
 
