@@ -17,6 +17,7 @@ from PyQt5.QtCore import *
 from PyQt5 import uic
 import sys, os
 import threading
+import nltk
 
 if getattr(sys, 'frozen', False):
     os.chdir(sys._MEIPASS)
@@ -29,7 +30,7 @@ class MyGUI(QMainWindow):
         uic.loadUi("untitled.ui", self)
         self.show()
         self.setWindowTitle("Text_To_Speech")
-        self.setWindowIcon(QIcon("Cult-Cover.jpg"))
+        self.setWindowIcon(QIcon("App Icon.png"))
         shortcut = QKeySequence(Qt.CTRL + Qt.Key_Q)
         self.shortcut = QShortcut(shortcut, self)
         self.shortcut.activated.connect(self.Close)
@@ -58,7 +59,11 @@ class MyGUI(QMainWindow):
         self.pushButton_10.clicked.connect(self.Language)
         comboBox=QComboBox()
         self.comboBox.addItems(["Romana", "English", "Español"])
+        self.pushButton_13.clicked.connect(self.Save_Language)
 
+        #****************Voice*********************#
+        self.pushButton_11.clicked.connect(self.Voice)
+        self.pushButton_14.clicked.connect(self.Save_Voice)
 
 
         self.pushButton_7.clicked.connect(self.RunGO)
@@ -71,9 +76,14 @@ class MyGUI(QMainWindow):
         self.spinBox.setEnabled(True)
         self.pushButton_2.setEnabled(True)
         self.pushButton.setEnabled(True)
+        self.lineEdit_3.setEnabled(True)
         self.pushButton_5.setEnabled(False)
         self.pushButton_6.setEnabled(False)
         self.pushButton_7.setEnabled(False)
+        self.pushButton_10.setEnabled(False)
+        self.pushButton_11.setEnabled(False)
+        self.pushButton_8.setEnabled(False)
+        self.pushButton_15.setEnabled(False)
         
     def Preview_Speed(self):
         Preview_Text="Acesta este un text pentru a testa rata de vorbire a vocii. Daca vorbeste prea rapid micsorati viteza!"
@@ -91,9 +101,14 @@ class MyGUI(QMainWindow):
         self.spinBox.setEnabled(False)
         self.pushButton_2.setEnabled(False)
         self.pushButton.setEnabled(False)
+        self.lineEdit_3.setEnabled(False)
         self.pushButton_5.setEnabled(True)
         self.pushButton_6.setEnabled(True)
         self.pushButton_7.setEnabled(True)
+        self.pushButton_10.setEnabled(True)
+        self.pushButton_11.setEnabled(True)
+        self.pushButton_8.setEnabled(True)
+        self.pushButton_15.setEnabled(True)
     
     #****************Volume*********************#
     def Volume(self):
@@ -103,6 +118,10 @@ class MyGUI(QMainWindow):
         self.pushButton_5.setEnabled(False)
         self.pushButton_6.setEnabled(False)
         self.pushButton_7.setEnabled(False)
+        self.pushButton_10.setEnabled(False)
+        self.pushButton_11.setEnabled(False)
+        self.pushButton_8.setEnabled(False)
+        self.pushButton_15.setEnabled(False)
         
     def Preview_Volume(self):
         Preview_Text="Acesta este un text pentru a testa volumul de vorbire a vocii. Daca vorbeste prea tare micsorati volumul!"
@@ -123,6 +142,10 @@ class MyGUI(QMainWindow):
         self.pushButton_5.setEnabled(True)
         self.pushButton_6.setEnabled(True)
         self.pushButton_7.setEnabled(True)
+        self.pushButton_10.setEnabled(True)
+        self.pushButton_11.setEnabled(True)
+        self.pushButton_8.setEnabled(True)
+        self.pushButton_15.setEnabled(True)
      
     #****************Select Folder*********************#
     def Select_Folder(self):
@@ -201,6 +224,41 @@ class MyGUI(QMainWindow):
         self.pushButton_11.setEnabled(False)
         self.pushButton_8.setEnabled(False)
         self.pushButton_15.setEnabled(False)
+    
+    def Save_Language(self):
+        self.comboBox.setEnabled(False)
+        self.pushButton_13.setEnabled(False)
+        self.pushButton_10.setEnabled(True)
+        self.pushButton_5.setEnabled(True)
+        self.pushButton_6.setEnabled(True)
+        self.pushButton_7.setEnabled(True)
+        self.pushButton_10.setEnabled(True)
+        self.pushButton_11.setEnabled(True)
+        self.pushButton_8.setEnabled(True)
+        self.pushButton_15.setEnabled(True)
+        
+    #****************Voice*********************#
+    def Voice(self):
+        self.comboBox_2.setEnabled(True)
+        self.pushButton_14.setEnabled(True)
+        self.pushButton_5.setEnabled(False)
+        self.pushButton_6.setEnabled(False)
+        self.pushButton_7.setEnabled(False)
+        self.pushButton_10.setEnabled(False)
+        self.pushButton_11.setEnabled(False)
+        self.pushButton_8.setEnabled(False)
+        self.pushButton_15.setEnabled(False)
+        
+    def Save_Voice(self):
+        self.comboBox_2.setEnabled(False)
+        self.pushButton_14.setEnabled(False)
+        self.pushButton_5.setEnabled(True)
+        self.pushButton_6.setEnabled(True)
+        self.pushButton_7.setEnabled(True)
+        self.pushButton_10.setEnabled(True)
+        self.pushButton_11.setEnabled(True)
+        self.pushButton_8.setEnabled(True)
+        self.pushButton_15.setEnabled(True)
 
     def GO(self):
         
@@ -216,19 +274,27 @@ class MyGUI(QMainWindow):
         
         print(Text)
 
-        self.lista=Function_Delete_First_Pages(Text)
-        #lista.pop(0)
-        print(self.lista)
-
-        self.lista=Function_Split_In_Chapters(self.lista)
         
-        print(self.lista)
+        propozitii=re.split("\.", Text)
+        print(propozitii)
+        piste=[]
+        parte=""
+        for i in propozitii:
+            length=len(nltk.word_tokenize(parte))
+            print(length)
+            if length<2900:
+                parte=parte+i+"."
+            else:
+                piste.append(parte)
+                parte=""
+                parte=""
+        
+        if parte!="":
+            piste.append(parte)
 
-        Piste=Function_Split_In_20min(self.lista)
+        print(piste)
 
-        print(Piste)
-
-        Function_Creare_Piste(Piste, self.dirName_Save, self.Book_Name)
+        Function_Creare_Piste(piste, self.dirName_Save, self.Book_Name)
 
 
     def RunGO(self):
@@ -252,7 +318,7 @@ def Function_Save_Pista(path, count, i, Book_Name):
     engine.runAndWait()
 
 def Function_Detect_Text_Language(reader):
-    Page_Reader=reader.pages[50]
+    Page_Reader=reader.pages[int(len(reader.pages)/2)]
     Page_Text=Page_Reader.extract_text()
 
     langdetect.DetectorFactory.seed = 0
@@ -266,16 +332,16 @@ def Function_Translate_Text(Text, page_no, Translate_From_Language, reader):
         Page_Reader=reader.pages[i]
         Page_Text=Page_Reader.extract_text()
     
-        if "CONTENTS" in Page_Text:
+        """if "CONTENTS" in Page_Text:
             pass
+        else:"""
+        if Translate_From_Language != "ro":
+            Translated_Page=GoogleTranslator(source=Translate_From_Language, target="ro").translate(Page_Text)
+            #Translated_Page=str(Translator.translate(Page_Text, src=Translate_From_Language, dest="ro"))
+            Text=Text+Translated_Page
         else:
-            if Translate_From_Language != "ro":
-                Translated_Page=GoogleTranslator(source=Translate_From_Language, target="ro").translate(Page_Text)
-                #Translated_Page=str(Translator.translate(Page_Text, src=Translate_From_Language, dest="ro"))
-                Text=Text+Translated_Page
-            else:
-                Text=Text+Page_Text
-            print("Pagina-",i,"a fost tradusa si scrisa.")
+            Text=Text+Page_Text
+        print("Pagina-",i,"a fost tradusa si scrisa.")
     
     print(len(Text))
     return Text
@@ -294,7 +360,7 @@ def Function_Delete_First_Pages(Text):
  
     #print(lista)
     return lista
-
+                
 def Function_Split_In_Chapters(lista):
     Text=""
     for i in lista:
@@ -347,10 +413,10 @@ def Function_Split_In_20min(lista):
         
     return piste
 
-def Function_Creare_Piste(Piste, dirName_Save, Book_Name):
+def Function_Creare_Piste(piste, dirName_Save, Book_Name):
     path=Function_Create_Save(dirName_Save, Book_Name)
     count=1
-    for i in Piste:
+    for i in piste:
         print("***PISTA***")
         print(i)
         """folderpath=dirName_Save
