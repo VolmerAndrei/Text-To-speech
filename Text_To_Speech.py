@@ -30,7 +30,7 @@ class MyGUI(QMainWindow):
         uic.loadUi("untitled.ui", self)
         self.show()
         self.setWindowTitle("Text_To_Speech")
-        self.setWindowIcon(QIcon("App Icon.png"))
+        self.setWindowIcon(QIcon("App_Icon.png"))
         shortcut = QKeySequence(Qt.CTRL + Qt.Key_Q)
         self.shortcut = QShortcut(shortcut, self)
         self.shortcut.activated.connect(self.Close)
@@ -272,16 +272,16 @@ class MyGUI(QMainWindow):
 
         Text=Function_Translate_Text(Text, page_no, Translate_From_Language, self.reader)  
         
-        print(Text)
+        #print(Text)
 
         
         propozitii=re.split("\.", Text)
-        print(propozitii)
+        #print(propozitii)
         piste=[]
         parte=""
         for i in propozitii:
             length=len(nltk.word_tokenize(parte))
-            print(length)
+            #print(length)
             if length<2900:
                 parte=parte+i+"."
             else:
@@ -292,7 +292,7 @@ class MyGUI(QMainWindow):
         if parte!="":
             piste.append(parte)
 
-        print(piste)
+        #print(piste)
 
         Function_Creare_Piste(piste, self.dirName_Save, self.Book_Name)
 
@@ -312,9 +312,9 @@ def Function_Create_Save(dirName_Save, Book_Name):
     
     
 def Function_Save_Pista(path, count, i, Book_Name):
-    filename=f"Pista-{count}--{Book_Name}.mp3"
+    filename=f"Pista-{count}--{Book_Name}.mp3"#mp3
     save_path=os.path.join(path, filename)
-    engine.save_to_file(f"Pista {count}"+i, save_path)
+    engine.save_to_file(f"{Book_Name} Pista {count}"+i, save_path)
     engine.runAndWait()
 
 def Function_Detect_Text_Language(reader):
@@ -341,9 +341,9 @@ def Function_Translate_Text(Text, page_no, Translate_From_Language, reader):
             Text=Text+Translated_Page
         else:
             Text=Text+Page_Text
-        print("Pagina-",i,"a fost tradusa si scrisa.")
+        #print("Pagina-",i,"a fost tradusa si scrisa.")
     
-    print(len(Text))
+    #print(len(Text))
     return Text
 
 def Function_Delete_First_Pages(Text):
@@ -376,12 +376,12 @@ def Function_Split_In_Chapters(lista):
     return lista
 
 def Function_Split_In_20min(lista):
-    for i in range(len(lista)):
+    """for i in range(len(lista)):
         print("\n")
         print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
         print(f"CAPITOLUL {i+1}")
         print(len(lista[i].split()))
-        print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+        print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$")"""
 
     piste=[]
     propozitii=[]
@@ -405,11 +405,11 @@ def Function_Split_In_20min(lista):
         else:
             piste.append(lista[i])
 
-    for i in range(len(piste)):
+    """for i in range(len(piste)):
         print("\n\n")
         print(len(piste[i].split()))
         print(f"PARTEA {i+1}")
-        print(piste[i])
+        print(piste[i])"""
         
     return piste
 
@@ -417,8 +417,8 @@ def Function_Creare_Piste(piste, dirName_Save, Book_Name):
     path=Function_Create_Save(dirName_Save, Book_Name)
     count=1
     for i in piste:
-        print("***PISTA***")
-        print(i)
+        #print("***PISTA***")
+        #print(i)
         """folderpath=dirName_Save
         createfolder=f"{Nume_Carte}--Carte Audio--Sintetica"
         path=os.path.join(folderpath, createfolder)
@@ -428,7 +428,7 @@ def Function_Creare_Piste(piste, dirName_Save, Book_Name):
         engine.runAndWait()"""
         print(dirName_Save)
         Function_Save_Pista(path, count, i, Book_Name)
-        print("Pista", count, Book_Name, "a fost salvata.")
+        #print("Pista", count, Book_Name, "a fost salvata.")
         count=count+1
     playsound('ding.mp3')
     
@@ -436,7 +436,7 @@ def Function_Creare_Piste(piste, dirName_Save, Book_Name):
 engine = pyttsx3.init()
 voices = engine.getProperty('voices')
 engine.setProperty('voice', "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\MSTTS_V110_roRO_Andrei")
-engine.setProperty('rate', 145)
+engine.setProperty('rate', 200)
 engine.setProperty('volume', 1.0)
 
 
