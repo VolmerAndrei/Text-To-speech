@@ -1,4 +1,5 @@
 ﻿from csv import reader
+from pickletools import uint1
 import PyPDF2 
 import gtts
 from gtts import gTTS
@@ -21,14 +22,40 @@ import nltk
 
 if getattr(sys, 'frozen', False):
     os.chdir(sys._MEIPASS)
+ui="UI/English.ui"
+class Language_Window(QMainWindow):
+    
+    SelectedUi="UI/English.ui"
+    
+    def __init__(self):
+        super(Language_Window, self).__init__()
+        self.Language_Window=QMainWindow()
+        uic.loadUi("UI/Language_Select.ui", self)
+        self.show()
+        self.setWindowTitle("Text_To_Speech")
+        self.setWindowIcon(QIcon("App_Icon.png"))
+        
+        #****************Language*********************#
+        comboBox=QComboBox()
+        self.comboBox.addItems(["Romana", "English", "Español"])
+        self.pushButton.clicked.connect(self.OpenMainWindow)
+        
+        
+    def OpenMainWindow(self):
+        secondWindow.close()
+        self.SelectedUi="UI/"+self.comboBox.currentText()+".ui"
+        print(self.SelectedUi)
+     
+        window.show()
 
 
 
 class MyGUI(QMainWindow):
+        
     def __init__(self):
         super(MyGUI, self).__init__()
-        uic.loadUi("untitled.ui", self)
-        self.show()
+        uic.loadUi(ui, self)
+
         self.setWindowTitle("Text_To_Speech")
         self.setWindowIcon(QIcon("App_Icon.png"))
         shortcut = QKeySequence(Qt.CTRL + Qt.Key_Q)
@@ -46,24 +73,23 @@ class MyGUI(QMainWindow):
         self.pushButton_3.clicked.connect(self.Preview_Volume)
         
         #****************Select Folder*********************#
-        self.pushButton_9.clicked.connect(self.Browse_Select_Folder)
         self.pushButton_8.clicked.connect(self.Select_Folder)
-        self.pushButton_12.clicked.connect(self.Save_Select_Folder)
         
         #****************Save Folder*********************#
-        self.pushButton_16.clicked.connect(self.Browse_Save_Folder)
         self.pushButton_15.clicked.connect(self.Save_Folder)
-        self.pushButton_17.clicked.connect(self.Save_Save_Folder)
 
         #****************Language*********************#
-        self.pushButton_10.clicked.connect(self.Language)
+        """self.pushButton_10.clicked.connect(self.Language)
         comboBox=QComboBox()
         self.comboBox.addItems(["Romana", "English", "Español"])
-        self.pushButton_13.clicked.connect(self.Save_Language)
+        self.pushButton_13.clicked.connect(self.Save_Language)"""
 
         #****************Voice*********************#
         self.pushButton_11.clicked.connect(self.Voice)
         self.pushButton_14.clicked.connect(self.Save_Voice)
+
+        #****************Progress Bar*********************#
+        
 
 
         self.pushButton_7.clicked.connect(self.RunGO)
@@ -80,7 +106,6 @@ class MyGUI(QMainWindow):
         self.pushButton_5.setEnabled(False)
         self.pushButton_6.setEnabled(False)
         self.pushButton_7.setEnabled(False)
-        self.pushButton_10.setEnabled(False)
         self.pushButton_11.setEnabled(False)
         self.pushButton_8.setEnabled(False)
         self.pushButton_15.setEnabled(False)
@@ -105,7 +130,6 @@ class MyGUI(QMainWindow):
         self.pushButton_5.setEnabled(True)
         self.pushButton_6.setEnabled(True)
         self.pushButton_7.setEnabled(True)
-        self.pushButton_10.setEnabled(True)
         self.pushButton_11.setEnabled(True)
         self.pushButton_8.setEnabled(True)
         self.pushButton_15.setEnabled(True)
@@ -118,7 +142,6 @@ class MyGUI(QMainWindow):
         self.pushButton_5.setEnabled(False)
         self.pushButton_6.setEnabled(False)
         self.pushButton_7.setEnabled(False)
-        self.pushButton_10.setEnabled(False)
         self.pushButton_11.setEnabled(False)
         self.pushButton_8.setEnabled(False)
         self.pushButton_15.setEnabled(False)
@@ -142,30 +165,18 @@ class MyGUI(QMainWindow):
         self.pushButton_5.setEnabled(True)
         self.pushButton_6.setEnabled(True)
         self.pushButton_7.setEnabled(True)
-        self.pushButton_10.setEnabled(True)
         self.pushButton_11.setEnabled(True)
         self.pushButton_8.setEnabled(True)
         self.pushButton_15.setEnabled(True)
      
     #****************Select Folder*********************#
     def Select_Folder(self):
-        self.pushButton_9.setEnabled(True)
-        self.lineEdit.setEnabled(True)
-        self.pushButton_12.setEnabled(True)
-        self.pushButton_5.setEnabled(False)
-        self.pushButton_6.setEnabled(False)
-        self.pushButton_7.setEnabled(False)
-        self.pushButton_10.setEnabled(False)
-        self.pushButton_11.setEnabled(False)
-        self.pushButton_15.setEnabled(False)
-    def Browse_Select_Folder(self):
         self.dirName_Select = QFileDialog.getOpenFileName(self, "Select Folder", "c:/", "PDF files (*.pdf)")
         directory=str(self.dirName_Select[0])
         print(directory)
         print(type(directory))
         self.reader=PyPDF2.PdfReader(directory)
         
-        self.lineEdit.setText(self.dirName_Select[0])
         Books=str(self.dirName_Select[0]).split("/")
         for i in Books:
             if ".pdf" in i:
@@ -174,43 +185,10 @@ class MyGUI(QMainWindow):
         print(Books)
         self.Book_Name=self.Book_Name.replace(".pdf", "")
         print(self.Book_Name)
-    def Save_Select_Folder(self):
-        self.pushButton_9.setEnabled(False)
-        self.lineEdit.setEnabled(False)
-        self.pushButton_12.setEnabled(False)
-        self.pushButton_5.setEnabled(True)
-        self.pushButton_6.setEnabled(True)
-        self.pushButton_7.setEnabled(True)
-        self.pushButton_10.setEnabled(True)
-        self.pushButton_11.setEnabled(True)
-        self.pushButton_15.setEnabled(True)
 
     #****************Save Folder*********************#
     def Save_Folder(self):
-        self.pushButton_16.setEnabled(True)
-        self.lineEdit_2.setEnabled(True)
-        self.pushButton_17.setEnabled(True)
-        self.pushButton_5.setEnabled(False)
-        self.pushButton_6.setEnabled(False)
-        self.pushButton_7.setEnabled(False)
-        self.pushButton_10.setEnabled(False)
-        self.pushButton_11.setEnabled(False)
-        self.pushButton_8.setEnabled(False)
-    def Browse_Save_Folder(self):
         self.dirName_Save = QFileDialog.getExistingDirectory(self, "Select Folder", "c:/")
-        self.lineEdit_2.setText(self.dirName_Save)
-        
-        
-    def Save_Save_Folder(self):
-        self.pushButton_16.setEnabled(False)
-        self.lineEdit_2.setEnabled(False)
-        self.pushButton_17.setEnabled(False)
-        self.pushButton_5.setEnabled(True)
-        self.pushButton_6.setEnabled(True)
-        self.pushButton_7.setEnabled(True)
-        self.pushButton_10.setEnabled(True)
-        self.pushButton_11.setEnabled(True)
-        self.pushButton_8.setEnabled(True)
     
     #****************Language*********************#
     def Language(self):
@@ -220,7 +198,6 @@ class MyGUI(QMainWindow):
         self.pushButton_5.setEnabled(False)
         self.pushButton_6.setEnabled(False)
         self.pushButton_7.setEnabled(False)
-        self.pushButton_10.setEnabled(False)
         self.pushButton_11.setEnabled(False)
         self.pushButton_8.setEnabled(False)
         self.pushButton_15.setEnabled(False)
@@ -232,7 +209,6 @@ class MyGUI(QMainWindow):
         self.pushButton_5.setEnabled(True)
         self.pushButton_6.setEnabled(True)
         self.pushButton_7.setEnabled(True)
-        self.pushButton_10.setEnabled(True)
         self.pushButton_11.setEnabled(True)
         self.pushButton_8.setEnabled(True)
         self.pushButton_15.setEnabled(True)
@@ -244,7 +220,6 @@ class MyGUI(QMainWindow):
         self.pushButton_5.setEnabled(False)
         self.pushButton_6.setEnabled(False)
         self.pushButton_7.setEnabled(False)
-        self.pushButton_10.setEnabled(False)
         self.pushButton_11.setEnabled(False)
         self.pushButton_8.setEnabled(False)
         self.pushButton_15.setEnabled(False)
@@ -255,13 +230,11 @@ class MyGUI(QMainWindow):
         self.pushButton_5.setEnabled(True)
         self.pushButton_6.setEnabled(True)
         self.pushButton_7.setEnabled(True)
-        self.pushButton_10.setEnabled(True)
         self.pushButton_11.setEnabled(True)
         self.pushButton_8.setEnabled(True)
         self.pushButton_15.setEnabled(True)
 
     def GO(self):
-        
         Text=""
 
         Translator=googletrans.Translator()
@@ -270,7 +243,7 @@ class MyGUI(QMainWindow):
 
         Translate_From_Language=Function_Detect_Text_Language(self.reader)
 
-        Text=Function_Translate_Text(Text, page_no, Translate_From_Language, self.reader)  
+        Text=Function_Translate_Text(Text, page_no, Translate_From_Language, self.reader, self.progressBar,  self.progressBarValue)  
         
         #print(Text)
 
@@ -440,9 +413,9 @@ engine.setProperty('rate', 200)
 engine.setProperty('volume', 1.0)
 
 
-
 app=QApplication([])
 window=MyGUI()
+secondWindow=Language_Window()
 app.exec_()
 
 r"""
