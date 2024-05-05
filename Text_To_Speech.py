@@ -1,6 +1,8 @@
 ﻿from csv import reader
 from pickletools import uint1
-import PyPDF2 
+import PyPDF2
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QWidget 
 import gtts
 from gtts import gTTS
 import pyttsx3
@@ -42,17 +44,19 @@ class Language_Window(QMainWindow):
         
         
     def OpenMainWindow(self):
-        secondWindow.close()
-        self.SelectedUi="UI/"+self.comboBox.currentText()+".ui"
-        print(self.SelectedUi)
-     
+        
+       
+        global ui
+        ui="UI/"+self.comboBox.currentText()+".ui"
+        print(ui)
+        global window
+        window=MyGUI()
         window.show()
-
-
 
 class MyGUI(QMainWindow):
         
     def __init__(self):
+        
         super(MyGUI, self).__init__()
         uic.loadUi(ui, self)
 
@@ -414,8 +418,8 @@ engine.setProperty('volume', 1.0)
 
 
 app=QApplication([])
-window=MyGUI()
-secondWindow=Language_Window()
+#window=MyGUI()
+window=Language_Window()
 app.exec_()
 
 r"""
