@@ -103,7 +103,7 @@ class MyGUI(QMainWindow):
 
     #****************Speed*********************#
     def Speed(self):
-        self.spinBox.setEnabled(True)
+        self.horizontalSlider.setEnabled(True)
         self.pushButton_2.setEnabled(True)
         self.pushButton.setEnabled(True)
         self.lineEdit_3.setEnabled(True)
@@ -116,7 +116,7 @@ class MyGUI(QMainWindow):
         
     def Preview_Speed(self):
         Preview_Text="Acesta este un text pentru a testa rata de vorbire a vocii. Daca vorbeste prea rapid micsorati viteza!"
-        rate=self.spinBox.value()
+        rate=self.horizontalSlider.value()
         print(rate)
         engine.setProperty('rate', rate)
         engine.say(Preview_Text)
@@ -124,10 +124,10 @@ class MyGUI(QMainWindow):
         engine.setProperty('rate', 200)
 
     def Save_Speed(self):
-        rate=self.spinBox.value()
+        rate=self.horizontalSlider.value()
         engine.setProperty('rate', rate)
         print(rate)
-        self.spinBox.setEnabled(False)
+        self.horizontalSlider.setEnabled(False)
         self.pushButton_2.setEnabled(False)
         self.pushButton.setEnabled(False)
         self.lineEdit_3.setEnabled(False)
@@ -140,7 +140,7 @@ class MyGUI(QMainWindow):
     
     #****************Volume*********************#
     def Volume(self):
-        self.doubleSpinBox.setEnabled(True)
+        self.horizontalSlider_2.setEnabled(True)
         self.pushButton_4.setEnabled(True)
         self.pushButton_3.setEnabled(True)
         self.pushButton_5.setEnabled(False)
@@ -152,7 +152,7 @@ class MyGUI(QMainWindow):
         
     def Preview_Volume(self):
         Preview_Text="Acesta este un text pentru a testa volumul de vorbire a vocii. Daca vorbeste prea tare micsorati volumul!"
-        vol=self.doubleSpinBox.value()
+        vol=self.horizontalSlider_2.value()/10
         print(vol)
         engine.setProperty('volume', vol)
         engine.say(Preview_Text)
@@ -160,10 +160,10 @@ class MyGUI(QMainWindow):
         engine.setProperty('volume', 1.0)
 
     def Save_Volume(self):
-        vol=self.doubleSpinBox.value()
+        vol=self.horizontalSlider_2.value()/10
         engine.setProperty('volume', vol)
         print(vol)
-        self.doubleSpinBox.setEnabled(False)
+        self.horizontalSlider_2.setEnabled(False)
         self.pushButton_4.setEnabled(False)
         self.pushButton_3.setEnabled(False)
         self.pushButton_5.setEnabled(True)
