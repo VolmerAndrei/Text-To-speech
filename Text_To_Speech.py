@@ -67,13 +67,9 @@ class MyGUI(QMainWindow):
         self.shortcut.activated.connect(self.Close)
         
         #****************Speed*********************#
-        self.pushButton_5.clicked.connect(self.Speed)
-        self.pushButton.clicked.connect(self.Save_Speed)
         self.pushButton_2.clicked.connect(self.Preview_Speed)
         
         #****************Volume*********************#
-        self.pushButton_6.clicked.connect(self.Volume)
-        self.pushButton_4.clicked.connect(self.Save_Volume)
         self.pushButton_3.clicked.connect(self.Preview_Volume)
         
         #****************Select Folder*********************#
@@ -89,11 +85,9 @@ class MyGUI(QMainWindow):
         self.pushButton_13.clicked.connect(self.Save_Language)"""
 
         #****************Voice*********************#
-        self.pushButton_11.clicked.connect(self.Voice)
-        self.pushButton_14.clicked.connect(self.Save_Voice)
 
         #****************Progress Bar*********************#
-        
+        self.progressBar=QProgressBar()
 
 
         self.pushButton_7.clicked.connect(self.RunGO)
@@ -102,18 +96,6 @@ class MyGUI(QMainWindow):
         sys.exit()
 
     #****************Speed*********************#
-    def Speed(self):
-        self.horizontalSlider.setEnabled(True)
-        self.pushButton_2.setEnabled(True)
-        self.pushButton.setEnabled(True)
-        self.lineEdit_3.setEnabled(True)
-        self.pushButton_5.setEnabled(False)
-        self.pushButton_6.setEnabled(False)
-        self.pushButton_7.setEnabled(False)
-        self.pushButton_11.setEnabled(False)
-        self.pushButton_8.setEnabled(False)
-        self.pushButton_15.setEnabled(False)
-        
     def Preview_Speed(self):
         Preview_Text="Acesta este un text pentru a testa rata de vorbire a vocii. Daca vorbeste prea rapid micsorati viteza!"
         rate=self.horizontalSlider.value()
@@ -123,33 +105,7 @@ class MyGUI(QMainWindow):
         engine.runAndWait()
         engine.setProperty('rate', 200)
 
-    def Save_Speed(self):
-        rate=self.horizontalSlider.value()
-        engine.setProperty('rate', rate)
-        print(rate)
-        self.horizontalSlider.setEnabled(False)
-        self.pushButton_2.setEnabled(False)
-        self.pushButton.setEnabled(False)
-        self.lineEdit_3.setEnabled(False)
-        self.pushButton_5.setEnabled(True)
-        self.pushButton_6.setEnabled(True)
-        self.pushButton_7.setEnabled(True)
-        self.pushButton_11.setEnabled(True)
-        self.pushButton_8.setEnabled(True)
-        self.pushButton_15.setEnabled(True)
-    
     #****************Volume*********************#
-    def Volume(self):
-        self.horizontalSlider_2.setEnabled(True)
-        self.pushButton_4.setEnabled(True)
-        self.pushButton_3.setEnabled(True)
-        self.pushButton_5.setEnabled(False)
-        self.pushButton_6.setEnabled(False)
-        self.pushButton_7.setEnabled(False)
-        self.pushButton_11.setEnabled(False)
-        self.pushButton_8.setEnabled(False)
-        self.pushButton_15.setEnabled(False)
-        
     def Preview_Volume(self):
         Preview_Text="Acesta este un text pentru a testa volumul de vorbire a vocii. Daca vorbeste prea tare micsorati volumul!"
         vol=self.horizontalSlider_2.value()/10
@@ -159,20 +115,6 @@ class MyGUI(QMainWindow):
         engine.runAndWait()
         engine.setProperty('volume', 1.0)
 
-    def Save_Volume(self):
-        vol=self.horizontalSlider_2.value()/10
-        engine.setProperty('volume', vol)
-        print(vol)
-        self.horizontalSlider_2.setEnabled(False)
-        self.pushButton_4.setEnabled(False)
-        self.pushButton_3.setEnabled(False)
-        self.pushButton_5.setEnabled(True)
-        self.pushButton_6.setEnabled(True)
-        self.pushButton_7.setEnabled(True)
-        self.pushButton_11.setEnabled(True)
-        self.pushButton_8.setEnabled(True)
-        self.pushButton_15.setEnabled(True)
-     
     #****************Select Folder*********************#
     def Select_Folder(self):
         self.dirName_Select = QFileDialog.getOpenFileName(self, "Select Folder", "c:/", "PDF files (*.pdf)")
@@ -195,87 +137,105 @@ class MyGUI(QMainWindow):
         self.dirName_Save = QFileDialog.getExistingDirectory(self, "Select Folder", "c:/")
     
     #****************Language*********************#
-    def Language(self):
-        self.comboBox.setEnabled(True)
-        self.pushButton_13.setEnabled(True)
-        self.pushButton_10.setEnabled(False)
-        self.pushButton_5.setEnabled(False)
-        self.pushButton_6.setEnabled(False)
-        self.pushButton_7.setEnabled(False)
-        self.pushButton_11.setEnabled(False)
-        self.pushButton_8.setEnabled(False)
-        self.pushButton_15.setEnabled(False)
-    
-    def Save_Language(self):
-        self.comboBox.setEnabled(False)
-        self.pushButton_13.setEnabled(False)
-        self.pushButton_10.setEnabled(True)
-        self.pushButton_5.setEnabled(True)
-        self.pushButton_6.setEnabled(True)
-        self.pushButton_7.setEnabled(True)
-        self.pushButton_11.setEnabled(True)
-        self.pushButton_8.setEnabled(True)
-        self.pushButton_15.setEnabled(True)
         
     #****************Voice*********************#
-    def Voice(self):
-        self.comboBox_2.setEnabled(True)
-        self.pushButton_14.setEnabled(True)
-        self.pushButton_5.setEnabled(False)
-        self.pushButton_6.setEnabled(False)
-        self.pushButton_7.setEnabled(False)
-        self.pushButton_11.setEnabled(False)
-        self.pushButton_8.setEnabled(False)
-        self.pushButton_15.setEnabled(False)
+    
+    #****************Progress Bar*********************#
         
-    def Save_Voice(self):
-        self.comboBox_2.setEnabled(False)
-        self.pushButton_14.setEnabled(False)
-        self.pushButton_5.setEnabled(True)
-        self.pushButton_6.setEnabled(True)
-        self.pushButton_7.setEnabled(True)
-        self.pushButton_11.setEnabled(True)
-        self.pushButton_8.setEnabled(True)
-        self.pushButton_15.setEnabled(True)
-
     def GO(self):
+        rate=self.horizontalSlider.value()
+        engine.setProperty('rate', rate)
+        print(rate)
+
+        vol=self.horizontalSlider_2.value()/10
+        engine.setProperty('volume', vol)
+        print(vol)
+        
+        durata=self.horizontalSlider_3.value()    
+
         Text=""
 
         Translator=googletrans.Translator()
 
         page_no=len(self.reader.pages)
+        progressBarVal=0
+        self.progressBar.setValue(progressBarVal)
+        self.progressBar.setMaximum(page_no)
+        self.progressBar.setEnabled(True)
+        
 
         Translate_From_Language=Function_Detect_Text_Language(self.reader)
+        
+        #time_to_finish=Function_Determine_Time(self.reader, Translate_From_Language, page_no)
+        #print(time_to_finish*page_no, "seconds")
+        
 
-        Text=Function_Translate_Text(Text, page_no, Translate_From_Language, self.reader, self.progressBar,  self.progressBarValue)  
+        Text=Function_Translate_Text(Text, page_no, Translate_From_Language, self.reader, progressBarVal, self.progressBar)  
         
         #print(Text)
-
+        
         
         propozitii=re.split("\.", Text)
+        progressBarVal=0
+        self.progressBar.setValue(progressBarVal)
+        self.progressBar.setMaximum(len(propozitii))
         #print(propozitii)
         piste=[]
         parte=""
         for i in propozitii:
+            
             length=len(nltk.word_tokenize(parte))
             #print(length)
-            if length<2900:
+            if length<rate*durata:
                 parte=parte+i+"."
             else:
                 piste.append(parte)
                 parte=""
                 parte=""
-        
+            progressBarVal=progressBarVal+1
+            self.progressBar.setValue(progressBarVal)
+            
         if parte!="":
             piste.append(parte)
 
         #print(piste)
 
-        Function_Creare_Piste(piste, self.dirName_Save, self.Book_Name)
+        progressBarVal=0
+        self.progressBar.setValue(progressBarVal)
+        self.progressBar.setMaximum(len(piste))
+
+        Function_Creare_Piste(piste, self.dirName_Save, self.Book_Name, progressBarVal, self.progressBar)
+        
+        self.progressBar.setValue(0)
+        self.progressBar.setEnabled(False)
 
 
     def RunGO(self):
         threading.Thread(target=self.GO).start()
+
+def Function_Determine_Time(reader, Translate_From_Language, page_no):
+    #start_time=time.time()
+    if Translate_From_Language!="ro":
+        Page_Reader=reader.pages[int(len(reader.pages)/2)]
+        start_time_translate = time.time()
+        Page_Text=Page_Reader.extract_text()
+        Translated_Page=GoogleTranslator(source=Translate_From_Language, target="ro").translate(Page_Text)
+        end_time_translate = time.time()
+        translation_time_1page = end_time_translate - start_time_translate
+        translation_time=translation_time_1page
+    else:
+        translation_time=0
+    start_time_voice_page = time.time()
+    filename="Time.mp3"
+    engine.save_to_file(Translated_Page, filename)
+    engine.runAndWait()
+    end_time_voice_page = time.time()
+    voice_time_1page=end_time_voice_page-start_time_voice_page
+    voice_time=voice_time_1page
+    #end_time=time.time()
+    time_to_finish=translation_time+voice_time
+    os.remove(filename)
+    return time_to_finish*page_no
 
 def Function_Create_Save(dirName_Save, Book_Name):
     folderpath=dirName_Save
@@ -303,9 +263,10 @@ def Function_Detect_Text_Language(reader):
     print(Translate_From_Language)
     return(Translate_From_Language)
 
-def Function_Translate_Text(Text, page_no, Translate_From_Language, reader):
+def Function_Translate_Text(Text, page_no, Translate_From_Language, reader, progressBarVal, progressBar):
     #page_no
     for i in range(page_no):
+        progressBarVal=progressBarVal+1
         Page_Reader=reader.pages[i]
         Page_Text=Page_Reader.extract_text()
     
@@ -318,9 +279,11 @@ def Function_Translate_Text(Text, page_no, Translate_From_Language, reader):
             Text=Text+Translated_Page
         else:
             Text=Text+Page_Text
-        #print("Pagina-",i,"a fost tradusa si scrisa.")
-    
+        print("Pagina-",i,"a fost tradusa si scrisa.")
+        progressBar.setValue(progressBarVal) 
+        
     #print(len(Text))
+           
     return Text
 
 def Function_Delete_First_Pages(Text):
@@ -390,10 +353,11 @@ def Function_Split_In_20min(lista):
         
     return piste
 
-def Function_Creare_Piste(piste, dirName_Save, Book_Name):
+def Function_Creare_Piste(piste, dirName_Save, Book_Name, progressBarVal, progressBar):
     path=Function_Create_Save(dirName_Save, Book_Name)
     count=1
     for i in piste:
+        progressBarVal=progressBarVal+1
         #print("***PISTA***")
         #print(i)
         """folderpath=dirName_Save
@@ -407,6 +371,7 @@ def Function_Creare_Piste(piste, dirName_Save, Book_Name):
         Function_Save_Pista(path, count, i, Book_Name)
         #print("Pista", count, Book_Name, "a fost salvata.")
         count=count+1
+        progressBar.setValue(progressBarVal)
     playsound('ding.mp3')
     
 
