@@ -1,6 +1,7 @@
 ﻿from csv import reader
 from pickletools import uint1
 import PyPDF2
+from PyQt5 import QtCore
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget 
 import gtts
@@ -34,7 +35,7 @@ class Language_Window(QMainWindow):
         self.Language_Window=QMainWindow()
         uic.loadUi("UI/Language_Select.ui", self)
         self.show()
-        self.setWindowTitle("Text_To_Speech")
+        self.setWindowTitle("EyeRead")
         self.setWindowIcon(QIcon("App_Icon.png"))
         
         #****************Language*********************#
@@ -45,22 +46,28 @@ class Language_Window(QMainWindow):
         
     def OpenMainWindow(self):
         
-       
+        global language
+        language=self.comboBox.currentText()
+        language=language.lower()
+        language=language[:2]
+        
         global ui
         ui="UI/"+self.comboBox.currentText()+".ui"
         print(ui)
+        print(language)
         global window
         window=MyGUI()
         window.show()
 
 class MyGUI(QMainWindow):
+    progressChanged = QtCore.Signal(int)
         
     def __init__(self):
         
         super(MyGUI, self).__init__()
         uic.loadUi(ui, self)
 
-        self.setWindowTitle("Text_To_Speech")
+        self.setWindowTitle("EyeRead")
         self.setWindowIcon(QIcon("App_Icon.png"))
         shortcut = QKeySequence(Qt.CTRL + Qt.Key_Q)
         self.shortcut = QShortcut(shortcut, self)
@@ -85,9 +92,20 @@ class MyGUI(QMainWindow):
         self.pushButton_13.clicked.connect(self.Save_Language)"""
 
         #****************Voice*********************#
-
+        lista_voci=[]
+        comboBox_2=QComboBox()
+        for i in voices:
+            lista_voci.append(i.name)
+        self.comboBox_2.addItems(lista_voci)
+        voice=self.comboBox_2.currentText()
+        for i in voices:
+            if i.name==voice:
+                engine.setProperty('voice', i.id)
+        
         #****************Progress Bar*********************#
         self.progressBar=QProgressBar()
+
+        #****************Language*********************#
 
 
         self.pushButton_7.clicked.connect(self.RunGO)
@@ -97,7 +115,12 @@ class MyGUI(QMainWindow):
 
     #****************Speed*********************#
     def Preview_Speed(self):
+        voice=self.comboBox_2.currentText()
+        for i in voices:
+            if i.name==voice:
+                engine.setProperty('voice', i.id)
         Preview_Text="Acesta este un text pentru a testa rata de vorbire a vocii. Daca vorbeste prea rapid micsorati viteza!"
+        Preview_Text=GoogleTranslator(source='ro', target=language).translate(Preview_Text)
         rate=self.horizontalSlider.value()
         print(rate)
         engine.setProperty('rate', rate)
@@ -107,7 +130,12 @@ class MyGUI(QMainWindow):
 
     #****************Volume*********************#
     def Preview_Volume(self):
+        voice=self.comboBox_2.currentText()
+        for i in voices:
+            if i.name==voice:
+                engine.setProperty('voice', i.id)
         Preview_Text="Acesta este un text pentru a testa volumul de vorbire a vocii. Daca vorbeste prea tare micsorati volumul!"
+        Preview_Text=GoogleTranslator(source='ro', target=language).translate(Preview_Text)
         vol=self.horizontalSlider_2.value()/10
         print(vol)
         engine.setProperty('volume', vol)
@@ -143,14 +171,21 @@ class MyGUI(QMainWindow):
     #****************Progress Bar*********************#
         
     def GO(self):
+        #//****************Rate*********************\\#
         rate=self.horizontalSlider.value()
         engine.setProperty('rate', rate)
         print(rate)
 
+        #//****************Volume*********************\\#
         vol=self.horizontalSlider_2.value()/10
         engine.setProperty('volume', vol)
         print(vol)
         
+        #//****************Voice*********************\\#
+        voice=self.comboBox_2.currentText()
+        for i in voices:
+            if i.name==voice:
+                engine.setProperty('voice', i.id)
         durata=self.horizontalSlider_3.value()    
 
         Text=""
@@ -213,7 +248,7 @@ class MyGUI(QMainWindow):
     def RunGO(self):
         threading.Thread(target=self.GO).start()
 
-def Function_Determine_Time(reader, Translate_From_Language, page_no):
+"""def Function_Determine_Time(reader, Translate_From_Language, page_no):
     #start_time=time.time()
     if Translate_From_Language!="ro":
         Page_Reader=reader.pages[int(len(reader.pages)/2)]
@@ -235,7 +270,7 @@ def Function_Determine_Time(reader, Translate_From_Language, page_no):
     #end_time=time.time()
     time_to_finish=translation_time+voice_time
     os.remove(filename)
-    return time_to_finish*page_no
+    return time_to_finish*page_no"""
 
 def Function_Create_Save(dirName_Save, Book_Name):
     folderpath=dirName_Save
@@ -273,13 +308,13 @@ def Function_Translate_Text(Text, page_no, Translate_From_Language, reader, prog
         """if "CONTENTS" in Page_Text:
             pass
         else:"""
-        if Translate_From_Language != "ro":
-            Translated_Page=GoogleTranslator(source=Translate_From_Language, target="ro").translate(Page_Text)
+        if Translate_From_Language != language:
+            Translated_Page=GoogleTranslator(source=Translate_From_Language, target=language).translate(Page_Text)
             #Translated_Page=str(Translator.translate(Page_Text, src=Translate_From_Language, dest="ro"))
             Text=Text+Translated_Page
         else:
             Text=Text+Page_Text
-        print("Pagina-",i,"a fost tradusa si scrisa.")
+        #print("Pagina-",i,"a fost tradusa si scrisa.")
         progressBar.setValue(progressBarVal) 
         
     #print(len(Text))
