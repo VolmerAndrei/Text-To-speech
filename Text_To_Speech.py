@@ -3,6 +3,7 @@ from pickletools import uint1
 import PyPDF2
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt
+from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import QWidget 
 import gtts
 from gtts import gTTS
@@ -60,7 +61,6 @@ class Language_Window(QMainWindow):
         window.show()
 
 class MyGUI(QMainWindow):
-    progressChanged = QtCore.Signal(int)
         
     def __init__(self):
         
@@ -103,7 +103,7 @@ class MyGUI(QMainWindow):
                 engine.setProperty('voice', i.id)
         
         #****************Progress Bar*********************#
-        self.progressBar=QProgressBar()
+        #self.progressBar=QProgressBar()
 
         #****************Language*********************#
 
@@ -193,10 +193,6 @@ class MyGUI(QMainWindow):
         Translator=googletrans.Translator()
 
         page_no=len(self.reader.pages)
-        progressBarVal=0
-        self.progressBar.setValue(progressBarVal)
-        self.progressBar.setMaximum(page_no)
-        self.progressBar.setEnabled(True)
         
 
         Translate_From_Language=Function_Detect_Text_Language(self.reader)
@@ -205,15 +201,12 @@ class MyGUI(QMainWindow):
         #print(time_to_finish*page_no, "seconds")
         
 
-        Text=Function_Translate_Text(Text, page_no, Translate_From_Language, self.reader, progressBarVal, self.progressBar)  
+        Text=Function_Translate_Text(Text, page_no, Translate_From_Language, self.reader)  
         
         #print(Text)
         
         
         propozitii=re.split("\.", Text)
-        progressBarVal=0
-        self.progressBar.setValue(progressBarVal)
-        self.progressBar.setMaximum(len(propozitii))
         #print(propozitii)
         piste=[]
         parte=""
@@ -227,22 +220,13 @@ class MyGUI(QMainWindow):
                 piste.append(parte)
                 parte=""
                 parte=""
-            progressBarVal=progressBarVal+1
-            self.progressBar.setValue(progressBarVal)
             
         if parte!="":
             piste.append(parte)
 
         #print(piste)
 
-        progressBarVal=0
-        self.progressBar.setValue(progressBarVal)
-        self.progressBar.setMaximum(len(piste))
-
-        Function_Creare_Piste(piste, self.dirName_Save, self.Book_Name, progressBarVal, self.progressBar)
-        
-        self.progressBar.setValue(0)
-        self.progressBar.setEnabled(False)
+        Function_Creare_Piste(piste, self.dirName_Save, self.Book_Name)
 
 
     def RunGO(self):
@@ -298,10 +282,9 @@ def Function_Detect_Text_Language(reader):
     print(Translate_From_Language)
     return(Translate_From_Language)
 
-def Function_Translate_Text(Text, page_no, Translate_From_Language, reader, progressBarVal, progressBar):
+def Function_Translate_Text(Text, page_no, Translate_From_Language, reader):
     #page_no
     for i in range(page_no):
-        progressBarVal=progressBarVal+1
         Page_Reader=reader.pages[i]
         Page_Text=Page_Reader.extract_text()
     
@@ -315,7 +298,6 @@ def Function_Translate_Text(Text, page_no, Translate_From_Language, reader, prog
         else:
             Text=Text+Page_Text
         #print("Pagina-",i,"a fost tradusa si scrisa.")
-        progressBar.setValue(progressBarVal) 
         
     #print(len(Text))
            
@@ -388,11 +370,10 @@ def Function_Split_In_20min(lista):
         
     return piste
 
-def Function_Creare_Piste(piste, dirName_Save, Book_Name, progressBarVal, progressBar):
+def Function_Creare_Piste(piste, dirName_Save, Book_Name):
     path=Function_Create_Save(dirName_Save, Book_Name)
     count=1
     for i in piste:
-        progressBarVal=progressBarVal+1
         #print("***PISTA***")
         #print(i)
         """folderpath=dirName_Save
@@ -406,7 +387,6 @@ def Function_Creare_Piste(piste, dirName_Save, Book_Name, progressBarVal, progre
         Function_Save_Pista(path, count, i, Book_Name)
         #print("Pista", count, Book_Name, "a fost salvata.")
         count=count+1
-        progressBar.setValue(progressBarVal)
     playsound('ding.mp3')
     
 
